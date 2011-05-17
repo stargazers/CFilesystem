@@ -1,0 +1,13 @@
+CFilesystem
+===========
+
+	Description:
+		PHP class for filesystem handling. For example with this class
+		we can get easily files or directories or both from given path.
+
+	License:
+		GNU AGPL
+
+	Author:
+		Aleksi Räsänen, 2011
+		aleksi.rasanen@runosydan.net
