@@ -81,6 +81,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		}
 
 		// ************************************************** 
+		//  getFilesFromPathByRegexp
+		/*!
+			@brief Get files with regexp name searching
+			
+			@param $path Path where we search
+
+			@param $regexp Regular expression what needs
+			  to be ended with /
+
+			@return Array of filenames
+		*/
+		// ************************************************** 
+		public function getFilesFromPathByRegexp( $path, $regexp )
+		{
+			$all = $this->getAllFilesFromPath( $path );
+			$files = array();
+			
+			foreach( $all as $filename )
+			{
+				if( preg_match( $regexp, basename( $filename ) ) )
+					$files[] = $filename;
+			}
+
+			return $files;
+		}
+
+		// ************************************************** 
 		//  getAllFilesFromPathWithExtension
 		/*!
 			@brief Get all files by extension from given path
@@ -177,6 +204,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				return $path . '/';
 
 			return $path;
+		}
+
+		// ************************************************** 
+		//  createFolderIfNotExists
+		/*!
+			@brief Create a folder if it does not exists.
+			  Note that this will not try to create a folder
+			  if there is already a file with that name.
+
+			@param $path Path to create
+		*/
+		// ************************************************** 
+		public function createFolderIfNotExists( $path )
+		{
+			if( file_exists( $path ) )
+				return;
+
+			if(! @mkdir( $path ) )
+				throw new Exception( 'Cannot create folder ' . $path );
 		}
 	}
 
