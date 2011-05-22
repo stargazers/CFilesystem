@@ -80,6 +80,59 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			return $files;
 		}
 
+		// ************************************************** 
+		//  getAllFilesFromPathWithExtension
+		/*!
+			@brief Get all files by extension from given path
+
+			@param $path Path where we search
+
+			@param $ext Extension. If multiple extensions
+			  are given, then this must be array. If only one
+			  extension is given, then it must be string.
+
+			@return Array of filenames
+		*/
+		// ************************************************** 
+		public function getAllFilesFromPathWithExtension( $path, $ext )
+		{
+			$files = array();
+			$all = $this->getAllFilesFromPath( $path );
+
+			foreach( $all as $file )
+			{
+				$e = $this->getFileExtension( $file );
+
+				if(! is_array( $ext ) && $e == $ext )
+					$files[] = $file;
+				else if( is_array( $ext ) && in_array( $e, $ext ) )
+					$files[] = $file;
+			}
+
+			return $files;
+		}
+
+		// ************************************************** 
+		//  getFileExtension
+		/*!
+			@brief Gets a file extension
+
+			@param $filename File
+
+			@return String
+		*/
+		// ************************************************** 
+		public function getFileExtension( $filename )
+		{
+			$filename = explode( '.', basename( $filename ) );
+			$max = count( $filename ) -1;
+
+			if( $max > 0 )
+				return $filename[$max];
+
+			return '';
+		}
+
 		// *************************************************
 		//	getAllDirectoriesFromPath
 		/*!
