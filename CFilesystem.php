@@ -225,6 +225,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			if(! @mkdir( $path ) )
 				throw new Exception( 'Cannot create folder ' . $path );
 		}
+
+		// ************************************************** 
+		//  getFilenameWithoutExtension
+		/*!
+			@brief Returns a filename without its extension
+
+			@param $filename Filename
+
+			@return String
+		*/
+		// ************************************************** 
+		public function getFilenameWithoutExtension( $filename )
+		{
+			$filename = basename( $filename );
+			$pos = strrpos( $filename, '.' );
+
+			if(! $pos )
+				return $filename;
+
+			return substr( $filename, 0, $pos );
+		}
 	}
 
 ?>
