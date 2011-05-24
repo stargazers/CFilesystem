@@ -246,6 +246,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			return substr( $filename, 0, $pos );
 		}
+
+		// ************************************************** 
+		//  getFileContentsInArray
+		/*!
+			@brief Read file contents and store its content
+			  in the array.
+
+			@param $filename Filename
+
+			@param $explode_string Char/string what is used
+			  when we do exploding from string to array.
+
+			@return Array
+		*/
+		// ************************************************** 
+		public function getFileContentsInArray( $filename, 
+			$explode_string )
+		{
+			if(! file_exists( $filename ) )
+				return array();
+
+			$data = file_get_contents( $filename );
+			return explode( $explode_string, $data );
+		}
 	}
 
 ?>
