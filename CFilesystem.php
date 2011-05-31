@@ -222,8 +222,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			if( file_exists( $path ) )
 				return;
 
-			if(! @mkdir( $path ) )
-				throw new Exception( 'Cannot create folder ' . $path );
+			$tmp = explode( '/', $path );
+			$tmp_path = '';
+
+			foreach( $tmp as $folder )
+			{
+				if(! empty( $folder ) )
+					$tmp_path .= $folder . '/';
+
+				if( $folder == '..' || $folder == '.' || empty( $folder ) )
+					continue;
+
+				if(! @mkdir( $tmp_path ) )
+					throw new Exception( 'Cannot create folder ' 
+						. $tmp_path );
+			}
 		}
 
 		// ************************************************** 
