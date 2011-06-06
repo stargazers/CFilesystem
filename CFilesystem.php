@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	//	CFilesystem
 	/*!
 		@brief Filesystem handling class.
-
 		@author Aleksi Räsänen <aleksi.rasanen@runosydan.net>
 	*/
 	// *************************************************
@@ -33,9 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		/*!
 			@brief Get all files and directories in array 
 			  from given path
-
 			@param $path Path where we search
-
 			@return Array of files.
 		*/
 		// *************************************************
@@ -58,9 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		//	getAllFilesFromPath
 		/*!
 			@brief Get all normal files from given path
-
 			@param $path Path where we search
-
 			@return Array of files
 		*/
 		// *************************************************
@@ -85,12 +80,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		//  getFilesFromPathByRegexp
 		/*!
 			@brief Get files with regexp name searching
-			
 			@param $path Path where we search
-
 			@param $regexp Regular expression what needs
 			  to be ended with /
-
 			@return Array of filenames
 		*/
 		// ************************************************** 
@@ -112,13 +104,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		//  getAllFilesFromPathWithExtension
 		/*!
 			@brief Get all files by extension from given path
-
 			@param $path Path where we search
-
 			@param $ext Extension. If multiple extensions
 			  are given, then this must be array. If only one
 			  extension is given, then it must be string.
-
 			@return Array of filenames
 		*/
 		// ************************************************** 
@@ -144,9 +133,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		//  getFileExtension
 		/*!
 			@brief Gets a file extension
-
 			@param $filename File
-
 			@return String
 		*/
 		// ************************************************** 
@@ -165,9 +152,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		//	getAllDirectoriesFromPath
 		/*!
 			@brief Get all directories from given path
-
 			@param $path Path where we search
-
 			@return Array of directory names
 		*/
 		// *************************************************
@@ -193,9 +178,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		/*!
 			@brief Add / in the end of string if there is
 			  no / char already in the end
-
 			@param $path String where we add ending slash
-
 			@return String where is char / in the end
 		*/
 		// *************************************************
@@ -213,7 +196,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			@brief Create a folder if it does not exists.
 			  Note that this will not try to create a folder
 			  if there is already a file with that name.
-
 			@param $path Path to create
 		*/
 		// ************************************************** 
@@ -243,9 +225,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		//  getFilenameWithoutExtension
 		/*!
 			@brief Returns a filename without its extension
-
 			@param $filename Filename
-
 			@return String
 		*/
 		// ************************************************** 
@@ -265,12 +245,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		/*!
 			@brief Read file contents and store its content
 			  in the array.
-
 			@param $filename Filename
-
 			@param $explode_string Char/string what is used
 			  when we do exploding from string to array.
-
 			@return Array
 		*/
 		// ************************************************** 
@@ -287,8 +264,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// ************************************************** 
 		//  createEmptyFile
 		/*!
-			@brief Creates a empty file
-
+			@brief Creates an empty file
 			@param $filename Filename
 		*/
 		// ************************************************** 
@@ -317,6 +293,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			$fh = fopen( $filename, $mode );
 			fwrite( $fh, $data );
 			fclose( $fh );
+		}
+
+		// ************************************************** 
+		//  getFilenamesNotInArray
+		/*!
+			@brief Get all filenames which does not exists in
+			  given array of filenames.
+			@param $path Path where we search all files
+			@param $filenames Array of filenames what we do
+			  not want to be listed in return array
+			@return Array of filenames in $path which was not
+			  listed in $filenames array.
+		*/
+		// ************************************************** 
+		public function getFilenamesNotInArray( $path, $filenames )
+		{
+			$all_files = $this->getAllFilesFromPath( $path );
+			$files_not_in_path = array();
+			
+			foreach( $all_files as $existing_file )
+			{
+				if(! in_array( basename( $existing_file ), $filenames ) )
+					$files_not_in_path[] = $existing_file;
+			}
+
+			return $files_not_in_path;
 		}
 	}
 
