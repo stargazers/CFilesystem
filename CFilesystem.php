@@ -283,6 +283,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			$data = file_get_contents( $filename );
 			return explode( $explode_string, $data );
 		}
+
+		// ************************************************** 
+		//  createEmptyFile
+		/*!
+			@brief Creates a empty file
+
+			@param $filename Filename
+		*/
+		// ************************************************** 
+		public function createEmptyFile( $filename )
+		{
+			if(! file_exists( $filename ) )
+				touch( $filename );
+		}
+
+		// ************************************************** 
+		//  createFileWithData
+		/*!
+			@brief Creates a new file with given data.
+			@param $filename Filename
+			@param $mode Mode of write, 'w' for write, 'a' for append.
+			@param $data Data to write in file.
+		*/
+		// ************************************************** 
+		public function createFileWithData( $filename, $mode, $data )
+		{
+			if( $mode != 'w' && $mode != 'a' )
+			{
+				throw new Exception( 'File mode must be w or a!' );
+			}
+
+			$fh = fopen( $filename, $mode );
+			fwrite( $fh, $data );
+			fclose( $fh );
+		}
 	}
 
 ?>
