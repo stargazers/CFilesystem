@@ -215,6 +215,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				if( $folder == '..' || $folder == '.' || empty( $folder ) )
 					continue;
 
+				if( file_exists( $tmp_path ) )
+					continue;
+
 				if(! @mkdir( $tmp_path ) )
 					throw new Exception( 'Cannot create folder ' 
 						. $tmp_path );
