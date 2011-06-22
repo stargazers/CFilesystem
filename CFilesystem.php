@@ -21,8 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	// *************************************************
 	//	CFilesystem
 	/*!
-		@brief Filesystem handling class.
-		@author Aleksi Räsänen <aleksi.rasanen@runosydan.net>
+		@brief Filesystem handling class
+		@author Aleksi Räsänen 
+		@email aleksi.rasanen@runosydan.net
+		@copyright Aleksi Räsänen, 2011
+		@license GNU AGPL v3 or newer
 	*/
 	// *************************************************
 	class CFilesystem
@@ -322,6 +325,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			}
 
 			return $files_not_in_path;
+		}
+
+		// ************************************************** 
+		//  deleteFile
+		/*!
+			@brief Deletes a file if file is found
+			@param $filename File to delete
+		*/
+		// ************************************************** 
+		public function deleteFile( $filename )
+		{
+			if(! file_exists( $filename ) )
+				return;
+
+			if(! unlink( $filename ) )
+			{
+				throw new Exception( 'Cannot delete file ' 
+					. $filename );
+			}
 		}
 	}
 
