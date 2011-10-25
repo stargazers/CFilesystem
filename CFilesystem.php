@@ -136,6 +136,80 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		}
 
 		// ************************************************** 
+		//  getAllFilesFromPathWithMultipleExtensions
+		/*!
+			@brief Get all files from path by multiple extensions.
+			@param $path Path where we search
+			@param $ext_array Array of extensions of files what should
+			  be searched from given path
+			@return Array of filenames
+		*/
+		// ************************************************** 
+		public function getAllFilesFromPathWithMultipleExtensions(
+			$path, $ext_array )
+		{
+			$files = array();
+
+			foreach( $ext_array as $ext )
+			{
+				$files[] = $this->getAllFilesFromPathWithExtension( 
+					$path, $ext );
+			}
+
+			return $files;
+		}
+		
+		// ************************************************** 
+		//  getAllFilesFromPathWithSameExtensions
+		/*!
+			@brief Get all files from path which have same filenames
+			  but different extensions. For example this might be
+			  used when we want to search all AVI-files from path
+			  which does have also TXT-file with it in same name but
+			  with different extension.
+			@param $path Path where we search
+			@param $ext_array Array of extensions which must be found.
+			@return Array of filenames. NOTE! This will return only
+			  the basename of filenames! For example if we search
+			  files *.txt and *.jpg and there is mufasa.jpg and mufasa.txt
+			  this return array include only 'mufasa', not any extension!
+		*/
+		// ************************************************** 
+		public function getAllFilesFromPathWithSameExtensions(
+			$path, $ext_array )
+		{
+			$files = $this->getAllFilesFromPathWithMultipleExtensions(
+				$path, $ext_array );
+
+			if(! isset( $files[0] ) )
+				return $files;
+
+			$final_files = array();
+			
+			foreach( $files[0] as $filename )
+			{
+				$file_to_search = $this->getFilenameWithoutExtension(
+					$filename );
+
+				for( $i=1;  $i<count( $files );$i++ )
+				{
+					foreach( $files[$i] as $tmp )
+					{
+						$tmp = $this->getFilenameWithoutExtension( $tmp );
+
+						if( $tmp == $file_to_search )
+						{
+							$final_files[] = $file_to_search;
+							break;
+						}
+					}
+				}
+			}
+
+			return $final_files;
+		}
+
+		// ************************************************** 
 		//  getFileExtension
 		/*!
 			@brief Gets a file extension
