@@ -116,6 +116,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// ************************************************** 
 		public function getAllFilesFromPathWithExtension( $path, $ext )
 		{
+			if( substr( $ext, 0, 1 ) == '.' )
+				$ext = substr( $ext, 1 );
+
 			$files = array();
 			$all = $this->getAllFilesFromPath( $path );
 
