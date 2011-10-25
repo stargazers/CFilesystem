@@ -422,6 +422,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					. $filename );
 			}
 		}
+		
+		// ************************************************** 
+		//  getTextBetweenStrings
+		/*!
+			@brief Get all texts between two strings which are
+			  on different lines.
+			@param $data Data where we search. This must be array!
+			@param $begin String where we start
+			@param $end String where we end
+			@return String
+		*/
+		// ************************************************** 
+		public function getTextBetweenStrings( $data, $begin, $end )
+		{
+			$readed = array();
+			$started = false;
+
+			foreach( $data as $line )
+			{
+				$line = trim( $line );
+
+				if( $started && $line == $end )
+					$started = false;
+
+				if( $line == $begin )
+				{
+					$started = true;	
+					continue;
+				}
+
+				if( $started )
+					$readed[] = $line;
+			}
+
+			return $readed;
+		}
 	}
 
 ?>
