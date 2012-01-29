@@ -458,6 +458,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			return $readed;
 		}
+
+		// ************************************************** 
+		//  getFileInfo
+		/*!
+			@brief Get file informations like mtime etc.
+			@return Assoc array, same values than PHP stat
+			  command will return. If files does not exists,
+			  returns -1.
+		*/
+		// ************************************************** 
+		public function getFileInfo( $filename )
+		{
+			if(! file_exists( $filename ) )
+				return -1;
+
+			return stat( $filename );
+		}
 	}
 
 ?>
