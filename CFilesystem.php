@@ -30,6 +30,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	// *************************************************
 	class CFilesystem extends CLogger
 	{
+		private $log;
+
+		// ************************************************** 
+		//  __construct
+		/*!
+			@brief Initialize class variables
+			@return Nothing
+		*/
+		// ************************************************** 
+		public function __construct()
+		{
+			$this->log = new CLog;
+			$this->log->setMessageType( 'in_method', '^In method:' );
+			$this->log->setMessageType( 'return', '^Return:' );
+			$this->log->setMessageType( 'error', '^Error:' );
+			$this->log->setMessageType( 'param', '^Param' );
+			$this->log->setMessageType( 'info', '^Info:' );
+			$this->setLoggingClassInstance( $this->log );
+		}
+
 		// *************************************************
 		//	getAllFilesAndDirectoriesFromPath
 		/*!
@@ -42,11 +62,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// *************************************************
 		public function getAllFilesAndDirectoriesFromPath( $path )
 		{
+			$this->logMsg( 'In method: getAllFilesAndDirectoriesFromPath' );
+
 			if(! file_exists( $path ) )
+			{
+				$this->logMsg( 'Error: File does not exists!' );
+				$this->logMsg( 'Return: -1' );
 				return -1;
+			}
 
 			if(! is_dir( $path ) )
+			{
+				$this->logMsg( 'Error: Path was not a directory!' );
+				$this->logMsg( 'Return: -2' );
 				return -2;
+			}
 			
 			$files = array();
 			$handle = opendir( $path );
@@ -58,6 +88,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			}
 
 			sort( $files );
+
+			$this->logMsg( 'Return: ' . $files );
+
 			return $files;
 		}
 
@@ -72,12 +105,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// *************************************************
 		public function getAllFilesFromPath( $path )
 		{
+			$this->logMsg( 'In method: getAllFilesFromPath' );
+
 			$all = $this->getAllFilesAndDirectoriesFromPath( $path );
 			$path = $this->addEndingSlash( $path );
 			$files = array();
 
 			if(! is_array( $all ) )
+			{
+				$this->logMsg( 'Error: Did not got array' );
+				$this->logMsg( 'Return: Return ' . $all );
 				return $all;
+			}
 
 			foreach( $all as $file )
 			{
@@ -87,6 +126,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					$files[] = $file;
 			}
 
+			$this->logMsg( 'Return: ' . $files );
 			return $files;
 		}
 
@@ -103,10 +143,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// ************************************************** 
 		public function getFilesFromPathByRegexp( $path, $regexp )
 		{
+			$this->logMsg( 'In method: getFilesFromPathByRegexp' );
+			$this->logMsg( 'Param $path: ' . $path );
+			$this->logMsg( 'Param $regexp: ' . $regexp );
+
 			$all = $this->getAllFilesFromPath( $path );
 
 			if(! is_array( $all ) )
+			{
+				$this->logMsg( 'Error: Did not got array!' );
+				$this->logMsg( 'Return: ' . $all );
 				return $all;
+			}
 
 			$files = array();
 			
@@ -116,6 +164,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					$files[] = $filename;
 			}
 
+			$this->logMsg( 'Return: ' . $files );
 			return $files;
 		}
 
@@ -132,6 +181,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// ************************************************** 
 		public function getAllFilesFromPathWithExtension( $path, $ext )
 		{
+			$this->logMsg( 'In method: getAllFilesFromPathWithExtension' );
+			$this->logMsg( 'Param $path: ' . $path );
+			$this->logMsg( 'Param $ext: ' . $ext );
+
 			if( substr( $ext, 0, 1 ) == '.' )
 				$ext = substr( $ext, 1 );
 
@@ -139,7 +192,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			$all = $this->getAllFilesFromPath( $path );
 
 			if(! is_array( $all ) )
+			{
+				$this->logMsg( 'Error: Did not got array' );
+				$this->logMsg( 'Return: ' . $all );
 				return $all;
+			}
 
 			foreach( $all as $file )
 			{
@@ -151,6 +208,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					$files[] = $file;
 			}
 
+			$this->logMsg( 'Return: ' . $files );
 			return $files;
 		}
 
@@ -167,6 +225,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		public function getAllFilesFromPathWithMultipleExtensions(
 			$path, $ext_array )
 		{
+			$this->logMsg( 
+				'In method: getAllFilesFromPathWithMultipleExtensions' );
+
+			$this->logMsg( 'Param $path: ' . $path );
+			$this->logMsg( 'Param $ext_array: ' . $ext_array );
+
 			$files = array();
 
 			foreach( $ext_array as $ext )
@@ -175,6 +239,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					$path, $ext );
 			}
 
+			$this->logMsg( 'Return: ' . $files );
 			return $files;
 		}
 		
@@ -197,11 +262,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		public function getAllFilesFromPathWithSameExtensions(
 			$path, $ext_array )
 		{
+			$this->logMsg( 'In method: getAllFilesFromPathWithSameExtensions' );
+			$this->logMsg( 'Param $path: ' . $path );
+			$this->logMsg( 'Param $ext_array: ' . $ext_array );
+
 			$files = $this->getAllFilesFromPathWithMultipleExtensions(
 				$path, $ext_array );
 
 			if(! isset( $files[0] ) )
+			{
+				$this->logMsg( 'Info: No files set in $files variable' );
+				$this->logMsg( 'Return: ' . $files );
 				return $files;
+			}
 
 			$final_files = array();
 			
@@ -225,6 +298,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				}
 			}
 
+			$this->logMsg( 'Return: ' . $final_files );
 			return $final_files;
 		}
 
@@ -238,12 +312,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// ************************************************** 
 		public function getFileExtension( $filename )
 		{
+			$this->logMsg( 'In method: getFileExtension' );
+			$this->logMsg( 'Param $filename: ' . $filename );
+
 			$filename = explode( '.', basename( $filename ) );
 			$max = count( $filename ) -1;
 
 			if( $max > 0 )
+			{
+				$this->logMsg( 'Return: ' . $filename[$max] );
 				return $filename[$max];
+			}
 
+			$this->logMsg( 'Return: Empty string' );
 			return '';
 		}
 
@@ -258,10 +339,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// *************************************************
 		public function getAllDirectoriesFromPath( $path )
 		{
+			$this->logMsg( 'In method: getAllDirectoriesFromPath' );
+			$this->logMsg( 'Param $path: ' . $path );
+
 			$all = $this->getAllFilesAndDirectoriesFromPath( $path );
 
 			if(! is_array( $all ) )
+			{
+				$this->logMsg( 'Error: Not array!' );
+				$this->logMsg( 'Return: ' . $all );
 				return $all;
+			}
 
 			$path = $this->addEndingSlash( $path );
 			$dirs = array();
@@ -274,6 +362,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					$dirs[] = $file;
 			}
 
+			$this->logMsg( 'Return: ' . $dirs );
 			return $dirs;
 		}
 
@@ -288,10 +377,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// *************************************************
 		public function addEndingSlash( $path )
 		{
-			if( substr( $path, strlen( $path ) -1, 1 ) != '/' )
-				return $path . '/';
+			$this->logMsg( 'In method: addEndingSlash' );
+			$this->logMsg( 'Param $path: ' . $path );
 
-			return $path;
+			$ret = $path;
+
+			if( substr( $path, strlen( $path ) -1, 1 ) != '/' )
+				$ret = $path . '/';
+
+			$this->logMsg( 'Return: ' . $ret );
+			return $ret;
 		}
 
 		// ************************************************** 
@@ -305,8 +400,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// ************************************************** 
 		public function createFolderIfNotExists( $path )
 		{
+			$this->logMsg( 'In method: createFolderIfNotExists' );
+			$this->logMsg( 'Param $path: ' . $path );
+
 			if( file_exists( $path ) )
+			{
+				$this->logMsg( 'Info: File already exists' );
 				return;
+			}
 
 			$tmp = explode( '/', $path );
 			$tmp_path = '';
@@ -323,8 +424,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					continue;
 
 				if(! @mkdir( $tmp_path ) )
+				{
+					$this->logMsg( 'Error: Cannot create folder ' 
+						. $tmp_path );
+
 					throw new Exception( 'Cannot create folder ' 
 						. $tmp_path );
+				}
 			}
 		}
 
@@ -338,13 +444,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// ************************************************** 
 		public function getFilenameWithoutExtension( $filename )
 		{
+			$this->logMsg( 'In method: getFilenameWithoutExtension' );
+			$this->logMsg( 'Param $filename: ' . $filename );
+
 			$filename = basename( $filename );
 			$pos = strrpos( $filename, '.' );
 
 			if(! $pos )
+			{
+				$this->logMsg( 'Return: ' . $filename );
 				return $filename;
+			}
 
-			return substr( $filename, 0, $pos );
+			$ret = substr( $filename, 0, $pos );
+
+			$this->logMsg( 'Return: ' . $ret );
+			return $ret;
 		}
 
 		// ************************************************** 
@@ -358,14 +473,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			@return Array
 		*/
 		// ************************************************** 
-		public function getFileContentsInArray( $filename, 
-			$explode_string )
+		public function getFileContentsInArray( $filename, $explode_string )
 		{
+			$this->logMsg( 'In method: getFileContentsInArray' );
+			$this->logMsg( 'Param $filename: ' . $filename );
+			$this->logMsg( 'Param $explode_string: ' . $explode_string );
+
 			if(! file_exists( $filename ) )
+			{
+				$this->logMsg( 'Error: File does not exists!' );
+				$this->logMsg( 'Return: Empty array' );
 				return array();
+			}
 
 			$data = file_get_contents( $filename );
-			return explode( $explode_string, $data );
+			$ret = explode( $explode_string, $data );
+
+			$this->logMsg( 'Return: ' . $ret );
+			return $ret;
 		}
 
 		// ************************************************** 
@@ -377,6 +502,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// ************************************************** 
 		public function createEmptyFile( $filename )
 		{
+			$this->logMsg( 'In method: createEmptyFile' );
+			$this->logMsg( 'Param $filename: ' . $filename );
+
 			if(! file_exists( $filename ) )
 				touch( $filename );
 		}
@@ -392,8 +520,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// ************************************************** 
 		public function createFileWithData( $filename, $mode, $data )
 		{
+			$this->logMsg( 'In method: createFileWithData' );
+			$this->logMsg( 'Param $filename: ' . $filename );
+			$this->logMsg( 'Param $mode: ' . $mode );
+			$this->logMsg( 'Param $data: '  . $data );
+
 			if( $mode != 'w' && $mode != 'a' )
 			{
+				$this->logMsg( 'Error: File mode must be w or a!' );
 				throw new Exception( 'File mode must be w or a!' );
 			}
 
@@ -416,6 +550,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// ************************************************** 
 		public function getFilenamesNotInArray( $path, $filenames )
 		{
+			$this->logMsg( 'In method: getFilenamesNotInArray' );
+			$this->logMsg( 'Param $path: ' . $path );
+			$this->logMsg( 'Param $filenames: ' . $filenames );
+
 			$all_files = $this->getAllFilesFromPath( $path );
 			$files_not_in_path = array();
 			
@@ -425,6 +563,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					$files_not_in_path[] = $existing_file;
 			}
 
+			$this->logMsg( 'Return: ' . $files_not_in_path );
 			return $files_not_in_path;
 		}
 
@@ -433,17 +572,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		/*!
 			@brief Deletes a file if file is found
 			@param $filename File to delete
+			@return Nothing
 		*/
 		// ************************************************** 
 		public function deleteFile( $filename )
 		{
+			$this->logMsg( 'In method: deleteFile' );
+			$this->logMsg( 'Param $filename: ' . $filename );
+
 			if(! file_exists( $filename ) )
+			{
+				$this->logMsg( 'Error: File not found' );
 				return;
+			}
 
 			if(! unlink( $filename ) )
 			{
+				$this->logMsg( 'Error: Cannot delete file!' );
 				throw new Exception( 'Cannot delete file ' 
 					. $filename );
+			}
+			else
+			{
+				$this->logMsg( 'File removed.' );
 			}
 		}
 		
@@ -455,11 +606,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			@param $data Data where we search. This must be array!
 			@param $begin String where we start
 			@param $end String where we end
-			@return String
+			@return String. If $data is not an array, return -1.
 		*/
 		// ************************************************** 
 		public function getTextBetweenStrings( $data, $begin, $end )
 		{
+			$this->logMsg( 'In method: getTextBetweenStrings' );
+			$this->logMsg( 'Param $data: ' . $data );
+			$this->logMsg( 'Param $begin: ' . $begin );
+			$this->logMsg( 'Param $end: ' . $end );
+
+			if(! is_array( $data ) )
+			{
+				$this->logMsg( 'Error: Data is not an array!' );
+				$this->logMsg( 'Return: -1' );
+				return -1;
+			}
+
 			$readed = array();
 			$started = false;
 
@@ -480,6 +643,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 					$readed[] = $line;
 			}
 
+			$this->logMsg( 'Return: ' . $readed );
 			return $readed;
 		}
 
@@ -487,6 +651,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		//  getFileInfo
 		/*!
 			@brief Get file informations like mtime etc.
+			@param $filename Name of a file which informations we want
 			@return Assoc array, same values than PHP stat
 			  command will return. If files does not exists,
 			  returns -1.
@@ -494,10 +659,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		// ************************************************** 
 		public function getFileInfo( $filename )
 		{
-			if(! file_exists( $filename ) )
-				return -1;
+			$this->logMsg( 'In method: getFileInfo' );
+			$this->logMsg( 'Param $filename is ' . $filename );
 
-			return stat( $filename );
+			if(! file_exists( $filename ) )
+			{
+				$this->logMsg( 'Error: File does not exists!' );
+				$this->logMsg( 'Return: -1' );
+				return -1;
+			}
+
+			$ret = stat( $filename );
+			$this->logMsg( 'Return: ' . $ret );
+
+			return $ret;
 		}
 	}
 
