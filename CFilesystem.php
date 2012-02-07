@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		@license GNU AGPL v3 or newer
 	*/
 	// *************************************************
-	class CFilesystem
+	class CFilesystem extends CLogger
 	{
 		// *************************************************
 		//	getAllFilesAndDirectoriesFromPath
@@ -36,11 +36,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			@brief Get all files and directories in array 
 			  from given path
 			@param $path Path where we search
-			@return Array of files.
+			@return Array of files if all is fine, -1 if $path
+			  not exists, -2 if $path is not a directory.
 		*/
 		// *************************************************
 		public function getAllFilesAndDirectoriesFromPath( $path )
 		{
+			if(! file_exists( $path ) )
+				return -1;
+
+			if(! is_dir( $path ) )
+				return -2;
+			
 			$files = array();
 			$handle = opendir( $path );
 
@@ -59,7 +66,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		/*!
 			@brief Get all normal files from given path
 			@param $path Path where we search
-			@return Array of files
+			@return Array of files. -1 if $path does not exists,
+			  -2 if path exists but is not a directory.
 		*/
 		// *************************************************
 		public function getAllFilesFromPath( $path )
@@ -67,6 +75,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			$all = $this->getAllFilesAndDirectoriesFromPath( $path );
 			$path = $this->addEndingSlash( $path );
 			$files = array();
+
+			if(! is_array( $all ) )
+				return $all;
 
 			foreach( $all as $file )
 			{
@@ -86,12 +97,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			@param $path Path where we search
 			@param $regexp Regular expression what needs
 			  to be ended with /
-			@return Array of filenames
+			@return Array of filenames. -1 if $path not exists,
+			  -2 if path exists but is not a directory.
 		*/
 		// ************************************************** 
 		public function getFilesFromPathByRegexp( $path, $regexp )
 		{
 			$all = $this->getAllFilesFromPath( $path );
+
+			if(! is_array( $all ) )
+				return $all;
+
 			$files = array();
 			
 			foreach( $all as $filename )
@@ -121,6 +137,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			$files = array();
 			$all = $this->getAllFilesFromPath( $path );
+
+			if(! is_array( $all ) )
+				return $all;
 
 			foreach( $all as $file )
 			{
@@ -233,12 +252,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		/*!
 			@brief Get all directories from given path
 			@param $path Path where we search
-			@return Array of directory names
+			@return Array of directory names, -1 if $path not exists,
+			  -2 if path exists but is not a directory.
 		*/
 		// *************************************************
 		public function getAllDirectoriesFromPath( $path )
 		{
 			$all = $this->getAllFilesAndDirectoriesFromPath( $path );
+
+			if(! is_array( $all ) )
+				return $all;
+
 			$path = $this->addEndingSlash( $path );
 			$dirs = array();
 
