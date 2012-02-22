@@ -187,10 +187,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			$this->logFunction( 'getAllFilesFromPathWithExtension',
 				get_defined_vars() );
 
-			$this->logMsg( 'In method: getAllFilesFromPathWithExtension' );
-			$this->logMsg( 'Param $path: ' . $path );
-			$this->logMsg( 'Param $ext: ' . $ext );
-
 			if( substr( $ext, 0, 1 ) == '.' )
 				$ext = substr( $ext, 1 );
 
