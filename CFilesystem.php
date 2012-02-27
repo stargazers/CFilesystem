@@ -560,7 +560,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			{
 				$error = error_get_last();	
 				$this->logMsg( 'Error: Cannot open file! Error was: ' 
-					. $error );
+					. $error['message'] );
 			}
 			else
 			{
@@ -633,6 +633,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			}
 
 			$this->logReturn();
+		}
+
+		// ************************************************** 
+		//  moveFile
+		/*!
+			@brief Move source file to destination
+			@param $source File what we move
+			@param $destination File where we move
+			@return True if file was moved, false if not
+		*/
+		// ************************************************** 
+		public function moveFile( $source, $destination )
+		{
+			$this->logFunction( '', get_defined_vars() );
+
+			if(! file_exists( $source ) )
+			{
+				$this->logMsg( 'Error: Source file does not exists!' );
+				$this->logReturn();
+				return false;
+			}
+
+			$ret = @rename( $source, $destination );
+
+			if( $ret )
+			{
+				$this->logMsg( 'Info: File moved.' );
+				$return = true;
+			}
+			else
+			{
+				$error = error_get_last();
+				$this->logMsg( 'Error: File cannot be moved! Error was: '
+					. $error['message'] );
+				$return = false;
+			}
+
+			$this->logReturn();
+			return $return;
 		}
 		
 		// ************************************************** 
