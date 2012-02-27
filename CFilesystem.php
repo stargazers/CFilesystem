@@ -554,9 +554,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				throw new Exception( 'File mode must be w or a!' );
 			}
 
-			$fh = fopen( $filename, $mode );
-			fwrite( $fh, $data );
-			fclose( $fh );
+			$fh = @fopen( $filename, $mode );
+
+			if(! $fh )
+			{
+				$error = error_get_last();	
+				$this->logMsg( 'Error: Cannot open file! Error was: ' 
+					. $error );
+			}
+			else
+			{
+				fwrite( $fh, $data );
+				fclose( $fh );
+				$this->logMsg( 'Info: File written.' );
+			}
 
 			$this->logReturn();
 		}
